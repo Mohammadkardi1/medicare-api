@@ -1,19 +1,24 @@
-import User from '../models/UserSchema.js'
+import Patient from '../models/PatientSchema.js'
 import Doctor from '../models/DoctorSchema.js'
 import Jwt  from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 
+
+
 export const register = async (req, res) => {
-    const {name, email, passwoed, role, gender, photo } = req.body
+    const {name, email, password, role, gender  } = req.body
 
     try {
 
         let user = null 
+
+
         if (role === 'patient') {
-            user = User.findOne({email})
+            user = await Patient.findOne({email})
         } else if (role === 'doctor') {
-            user = Doctor.findOne({email})
+            user = await Doctor.findOne({email})
         }
+
 
         // check if user exist
         if (user) {
@@ -26,20 +31,33 @@ export const register = async (req, res) => {
         const hashPassword = await bcrypt.hash(password, salt)
 
         if(role === 'patient') {
-            user = new User({
+            user = new Patient({
                 name,
                 email,
                 password: hashPassword,
                 role,
-                gender,
-                photo
+                gender
             })
         }
 
-        res.status(200).json({message: 'You are registered in successefully'})
+
+        if(role === 'doctor') {
+            user = new Doctor({
+                name,
+                email,
+                password: hashPassword,
+                role,
+                gender
+            })
+        }
+
+        await user.save()
+
+
+        res.status(200).json({success: true, message: 'You are successfully registered.'})
 
     } catch (error) {
-        res.status(400).json({message: "Something went wrong"})
+        res.status(500).json({success:false, message: "Internal server error, try again"})
     }
 }
 
