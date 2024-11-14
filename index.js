@@ -36,9 +36,6 @@ app.use(cookieParser())
 app.use(cors(corsOptions))
 app.use('/api/auth', authRoutes)
 
-// app.get('/', (req, res) => {
-//     res.send('API is working')
-// })
 
 
 app.listen(port, () => {
