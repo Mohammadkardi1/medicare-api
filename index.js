@@ -5,6 +5,7 @@ import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import authRoutes from './routes/authRoutes.js'
 
+
 dotenv.config()
 
 const app = express()
@@ -34,7 +35,9 @@ const connectDB = async () => {
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors(corsOptions))
+
 app.use('/api/auth', authRoutes)
+
 
 
 
