@@ -4,6 +4,13 @@ import Jwt  from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 
 
+const generateToken = (user) => {
+    return Jwt.sign(
+        {id: user._id,role: user.role}, 
+        process.env.JWT_SECRET_KEY, 
+        {expiresIn: '24h'}
+)}
+
 // API register endpoint
 export const register = async (req, res) => {
     const {name, email, password, role, gender} = req.body
@@ -41,20 +48,54 @@ export const register = async (req, res) => {
         // Save a document
         await user.save()
 
-        res.status(200).json({success: true, message: 'You are successfully registered.'})
+        return res.status(200).json({success: true, message: 'You are successfully registered.'})
 
     } catch (error) {
 
-        res.status(500).json({success:false, message: "Internal server error, try again"})
+        return res.status(500).json({success:false, message: "Internal server error, try again"})
     }
 }
 
 // API login endpoint
 export const login = async (req, res) => {
+    const {email, password} = req.body
+
     try {
-        res.status(200).json({message:"You are successfully loged in"})
+
+        let user = null
+
+        const patient = await Patient.findOne({email})
+        const doctor = await Doctor.findOne({email})
+
+        if (patient) {
+            user = patient
+        }
+
+        if (doctor) {
+            user = doctor
+        }
+
+
+        // Check if the user exsits in Database
+        if (!user) {
+            return res.status(404).json({message: "User not found! Please Sign up."})
+        }
+
+        // Compare password
+        const isPasswordMatch = await bcrypt.compare(req.body.password, user.password)
+
+        if (!isPasswordMatch) {
+            return res.status(400).json({status: false, message: "Invalid credentials."})
+        }
+
+        // get toke
+        const token = generateToken(user)
+
+        const {password, role, appointments, ...rest} = user._doc
+
+        return res.status(200).json({status: true, message:"Successfully logged in.", token, data:{...rest}, role})
     } catch (error) {
-        res.status(400).json({message:"Something went wrong"})
+        return res.status(500).json({status: false, message:"Failed to login"})
 
     }
 }
