@@ -3,8 +3,8 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
-import authRoutes from './routes/authRoutes.js'
-import crypto from 'crypto'
+import authRouter from './routes/authRouter.js'
+import patientRouter from './routes/patientRouter.js'
 
 
 
@@ -33,16 +33,17 @@ const connectDB = async () => {
 }
 
 
-// middleware
+// Middleware
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors(corsOptions))
 
-app.use('/api/auth', authRoutes)
+// Define routes for endpoints
+app.use('/api/auth', authRouter)
+app.use('/api/patient', patientRouter)
 
 
-
-
+// Start the server
 app.listen(port, () => {
     connectDB()
     console.log("Server is running on port " + port)
