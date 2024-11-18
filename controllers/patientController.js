@@ -1,11 +1,16 @@
-import Patient from '../models/PatientSchema.js'
+import PatientSchema from '../models/PatientSchema.js'
 
 
 export const getAllPatients = async (req, res) => {
     try {
-        const patients = await Patient.find()
+        const patients = await PatientSchema.find().select("-password")
 
-        return res.status(200).json({success: true, message: "Successfully retrieved.", data: patients})
+        if (patients.length > 0) {
+            return res.status(200).json({success: true, message: "Successfully retrieved.", data: patients})
+        } else {
+            return res.status(404).json({success: true, message: "Patients Not Found."})
+        }
+
     } catch (error) {
         return res.status(500).json({success: false, message: "Failed to retrieve."})
     }
@@ -15,18 +20,23 @@ export const getAllPatients = async (req, res) => {
 export const getSinglePatient = async (req, res) => {
     const patientId = req.params.patientId
     try {
-        const patient = await Patient.findById(patientId)
+        const patient = await PatientSchema.findById(patientId).select("-password")
 
-        return res.status(200).json({success: true, message: "Successfully retrieved.", data: patient})
+        if (patient) {
+            return res.status(200).json({success: true, message: "Successfully retrieved.", data: patient})
+        } else {
+            return res.status(404).json({success: true, message: "Patient Not Found."})
+        }
+
     } catch (error) {
-        return res.status(404).json({success: false, message: "Patient Not Found."})
+        return res.status(500).json({success: false, message: "Failed to retrieve."})
     }
 }
 
 export const deletePatient = async (req, res) => {
     const patientId = req.params.patientId
     try {
-        await Patient.findByIdAndDelete(patientId)
+        await PatientSchema.findByIdAndDelete(patientId)
 
         return res.status(200).json({success: true, messsage: "Successfully deleted."})
     } catch (error) {
@@ -36,22 +46,19 @@ export const deletePatient = async (req, res) => {
 
 
 
-// export const updatePatient = async (req, res) => {
-//     const patientId = req.params.patientId 
+export const updatePatient = async (req, res) => {
+    const patientId = req.params.patientId 
 
-//     try {
-//         const updatedPatient = await Patient.findByIdAndUpdate(patientId, {$set: req.body}, {new: true})
+    try {
+        const updatedPatient = await PatientSchema.findByIdAndUpdate(patientId, {$set: req.body}, {new: true}).select("-password")
 
-//         return res.status(200).json({success: true, message: "Successfully updated.", data: updatedPatient})
-//     } catch (error) {
-//         return req.status(500).json({success: false, message: "Failed to update."})
-//     }
-// }
+        if (updatedPatient) {
+            return res.status(200).json({success: true, message: "Successfully updated.", data: updatedPatient})
+        } else {
+            return res.status(404).json({success: true, message: "Patient Not Found."})
+        }
 
-
-
-
-
-
-
-
+    } catch (error) {
+        return req.status(500).json({success: false, message: "Failed to update."})
+    }
+}
