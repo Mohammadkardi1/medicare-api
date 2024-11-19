@@ -1,7 +1,7 @@
 import PatientSchema from '../models/PatientSchema.js'
 
 
-export const getAllPatients = async (req, res) => {
+export const fetchPatients = async (req, res) => {
     try {
         const patients = await PatientSchema.find().select("-password")
 
@@ -16,8 +16,8 @@ export const getAllPatients = async (req, res) => {
     }
 }
 
-
-export const getSinglePatient = async (req, res) => {
+// fetchPatientById
+export const fetchPatient = async (req, res) => {
     const patientId = req.params.patientId
     try {
         const patient = await PatientSchema.findById(patientId).select("-password")

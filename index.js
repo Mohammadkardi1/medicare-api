@@ -5,7 +5,7 @@ import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import authRouter from './routes/authRouter.js'
 import patientRouter from './routes/patientRouter.js'
-
+import doctorRouter from './routes/doctorRouter.js'
 
 
 dotenv.config()
@@ -41,6 +41,7 @@ app.use(cors(corsOptions))
 // Define routes for endpoints
 app.use('/api/auth', authRouter)
 app.use('/api/patient', patientRouter)
+app.use('/api/doctor', doctorRouter)
 
 
 // Start the server

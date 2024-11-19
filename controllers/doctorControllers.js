@@ -1,12 +1,26 @@
 import DoctorSchema from '../models/DoctorSchema.js'
 
 
-export const getAllDoctors = async (req, res) => {
-    try {
-        const doctors = await DoctorSchema.find().select('-password')
+export const fetchDoctors = async (req, res) => {
 
-        if (doctors.length > 0 ) {
-            return res.status(200).json({success: true, message: "Successfully retrieved.", data: doctors})
+    const { query } = req.query
+    let retrievedDoctors 
+
+    try {
+
+        if (query) {
+            retrievedDoctors = await DoctorSchema.find({
+                isApproved: "approved",
+                $or: [{name: {$regex: query, $options: "i"}}, {specialization: {$regex: query, $option: "i"}}]
+            }).select("-password")
+        } else {
+            retrievedDoctors = await DoctorSchema.find({isApproved: "approved"}).select("-password")
+        }
+
+
+
+        if (retrievedDoctors.length > 0 ) {
+            return res.status(200).json({success: true, message: "Successfully retrieved.", data: retrievedDoctors})
         } else {
             return res.status(404).json({success: true, message: "Doctors Not Found", })
         }
@@ -16,8 +30,8 @@ export const getAllDoctors = async (req, res) => {
     }
 }
 
-
-export const getSingleDoctor = async (req, res) => {
+// fetchDoctorById
+export const fetchDoctor = async (req, res) => {
     const doctorId = req.params.doctorId
     try {
         const doctor = await DoctorSchema.findById(doctorId).select("-password")
@@ -49,7 +63,7 @@ export const updateDoctor = async (req, res) => {
 
     const doctorId = req.params.doctorId
     try {
-        const updateDoctor = await DoctorSchema.findByIdAndUpdate(doctorId, {$set: req.body}, {rew: true}).select('-passwoed')
+        const updateDoctor = await DoctorSchema.findByIdAndUpdate(doctorId, {$set: req.body}, {new: true}).select('-passwoed')
 
 
         if (updateDoctor) {

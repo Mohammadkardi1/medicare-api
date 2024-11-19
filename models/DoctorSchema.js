@@ -19,7 +19,7 @@ const DoctorSchema = new mongoose.Schema({
   reviews: [{type: mongoose.Types.ObjectId, ref: "Review" }],
   averageRating: {type: Number, default: 0,},
   totalRating: {type: Number, default: 0,},
-  isApproved: {type: String, enum: ["pending", "approved", "cancelled"], default: "pending",},
+  isApproved: {type: String, enum: ["pending", "approved", "cancelled"], default: "pending"},
   appointments: [{ type: mongoose.Types.ObjectId, ref: "Appointment" }],
 });
 
