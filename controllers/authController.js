@@ -16,8 +16,6 @@ export const register = async (req, res) => {
     const {name, email, password, role, gender} = req.body
 
     try {
-
-
         const [patient, doctor] = await Promise.all([
             PatientSchema.findOne({email}),
             DoctorSchema.findOne({email})
@@ -60,7 +58,6 @@ export const login = async (req, res) => {
     const {email, password} = req.body
 
     try {
-
 
         const [patient, doctor] = await Promise.all([
             PatientSchema.findOne({email}),
