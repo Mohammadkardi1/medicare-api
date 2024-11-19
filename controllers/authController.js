@@ -1,12 +1,12 @@
-import Patient from '../models/PatientSchema.js'
-import Doctor from '../models/DoctorSchema.js'
+import PatientSchema from '../models/PatientSchema.js'
+import DoctorSchema from '../models/DoctorSchema.js'
 import Jwt  from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 
 
 const generateToken = (user) => {
     return Jwt.sign(
-        {id: user._id,role: user.role}, 
+        {id: user._id, name: user.name, role: user.role},
         process.env.JWT_SECRET_KEY, 
         {expiresIn: '24h'}
 )}
@@ -17,17 +17,17 @@ export const register = async (req, res) => {
 
     try {
 
-        let user = null
-        
-        if (role === 'patient') {
-            user = await Patient.findOne({email})
-        } else if (role === 'doctor') {
-            user = await Doctor.findOne({email})
-        }
+
+        const [patient, doctor] = await Promise.all([
+            PatientSchema.findOne({email}),
+            DoctorSchema.findOne({email})
+        ])
+
+        const isUserExists = patient || doctor
 
 
         // check if the user exists in Database
-        if (user) {
+        if (isUserExists) {
             return res.status(400).json({message: "User already exist"})
         }
 
@@ -36,17 +36,16 @@ export const register = async (req, res) => {
         const salt = await bcrypt.genSalt(10)
         const hashPassword = await bcrypt.hash(password, salt)
 
-        if(role === 'patient') {
-            user = new Patient({name, email, password: hashPassword, role, gender})
+
+        let user = null
+        const userModel = role === 'patient' ? PatientSchema : role === 'doctor' ? DoctorSchema : null
+
+        if (userModel) {
+            user = new userModel({ name, email, password: hashPassword, role, gender })
+            await user.save()
+        } else {
+            return res.status(400).json({ success: false, message: 'Invalid role.' })
         }
-
-
-        if(role === 'doctor') {
-            user = new Doctor({name, email, password: hashPassword, role, gender})
-        }
-
-        // Save a document
-        await user.save()
 
         return res.status(200).json({success: true, message: 'You are successfully registered.'})
 
@@ -62,23 +61,18 @@ export const login = async (req, res) => {
 
     try {
 
-        let user = null
 
-        const patient = await Patient.findOne({email})
-        const doctor = await Doctor.findOne({email})
+        const [patient, doctor] = await Promise.all([
+            PatientSchema.findOne({email}),
+            DoctorSchema.findOne({email})
+        ])
 
-        if (patient) {
-            user = patient
-        }
-
-        if (doctor) {
-            user = doctor
-        }
-
+        const user = patient || doctor
+        
 
         // Check if the user exsits in Database
         if (!user) {
-            return res.status(404).json({message: "User not found! Please Sign up."})
+            return res.status(404).json({success: false, message: "User not found! Please Sign up."})
         }
 
         // Compare password
@@ -96,6 +90,5 @@ export const login = async (req, res) => {
         return res.status(200).json({status: true, message:"Successfully logged in.", token, data:{...rest}, role})
     } catch (error) {
         return res.status(500).json({status: false, message:"Failed to login"})
-
     }
 }

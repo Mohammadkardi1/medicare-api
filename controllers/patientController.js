@@ -18,6 +18,7 @@ export const fetchPatients = async (req, res) => {
 
 // fetchPatientById
 export const fetchPatient = async (req, res) => {
+
     const patientId = req.params.patientId
     try {
         const patient = await PatientSchema.findById(patientId).select("-password")
