@@ -6,7 +6,7 @@ import dotenv from 'dotenv'
 import authRouter from './routes/authRouter.js'
 import patientRouter from './routes/patientRouter.js'
 import doctorRouter from './routes/doctorRouter.js'
-
+import reviewRouter from './routes/reviewRouter.js'
 
 dotenv.config()
 
@@ -42,6 +42,7 @@ app.use(cors(corsOptions))
 app.use('/api/auth', authRouter)
 app.use('/api/patient', patientRouter)
 app.use('/api/doctor', doctorRouter)
+app.use('/api/review', reviewRouter)
 
 
 // Start the server

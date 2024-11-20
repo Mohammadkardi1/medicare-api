@@ -45,11 +45,11 @@ export const register = async (req, res) => {
             return res.status(400).json({ success: false, message: 'Invalid role.' })
         }
 
-        return res.status(200).json({success: true, message: 'You are successfully registered.'})
+        return res.status(200).json({success: true, message: 'You have been registered successfully.'})
 
     } catch (error) {
 
-        return res.status(500).json({success:false, message: "Internal server error, try again"})
+        return res.status(500).json({success:false, message: "Internal server error. Please try again later."})
     }
 }
 
@@ -84,8 +84,8 @@ export const login = async (req, res) => {
 
         const {password, role, appointments, ...rest} = user._doc
 
-        return res.status(200).json({status: true, message:"Successfully logged in.", token, data:{...rest}, role})
+        return res.status(200).json({status: true, message:"You have been logged in Successfully.", token, data:{...rest}, role})
     } catch (error) {
-        return res.status(500).json({status: false, message:"Failed to login"})
+        return res.status(500).json({status: false, message:"Internal server error. Please try again later."})
     }
 }

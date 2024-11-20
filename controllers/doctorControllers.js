@@ -20,13 +20,13 @@ export const fetchDoctors = async (req, res) => {
 
 
         if (retrievedDoctors.length > 0 ) {
-            return res.status(200).json({success: true, message: "Successfully retrieved.", data: retrievedDoctors})
+            return res.status(200).json({success: true, message: "The doctors' documents have been retrieved Successfully.", data: retrievedDoctors})
         } else {
             return res.status(404).json({success: true, message: "Doctors Not Found", })
         }
 
     } catch (error) {
-        return res.status(500).json({success: false, message: "Failed to retrieved."})
+        return res.status(500).json({success: false, message: "Internal server error. Please try again later."})
     }
 }
 
@@ -37,12 +37,12 @@ export const fetchDoctor = async (req, res) => {
         const doctor = await DoctorSchema.findById(doctorId).select("-password")
 
         if (doctor) {
-            return res.status(200).json({success: true, message: "Successfully retrieved", data: doctor})
+            return res.status(200).json({success: true, message: "The doctor document has been retrieved Successfully.", data: doctor})
         } else {
             return res.status(404).json({success: true, message: "Doctor Not Found."})
         }
     } catch (error) {
-        return res.status(500).json({success: false, message: "Failed to retrieved."})
+        return res.status(500).json({success: false, message: "Internal server error. Please try again later."})
     }
 }
 
@@ -52,9 +52,9 @@ export const deleteDoctor = async (req, res) => {
     try {
         await DoctorSchema.findByIdAndDelete(doctorId)
 
-        return res.status(200).json({success: true, messsage: "Successfully deleted."})
+        return res.status(200).json({success: true, messsage: "The doctor document has been deleted Successfully."})
     } catch (error) {
-        return res.status(500).json({success: false, message: "Failed to delete."})
+        return res.status(500).json({success: false, message: "Internal server error. Please try again later."})
     }
 }
 
@@ -67,12 +67,12 @@ export const updateDoctor = async (req, res) => {
 
 
         if (updateDoctor) {
-            return res.status(200).json({success: true, message: "Successfully updated.", data: updateDoctor})
+            return res.status(200).json({success: true, message: "The doctor document has been updated Successfully.", data: updateDoctor})
         } else {
             return res.status(404).json({success: true, message: "Doctor Not Found."})
         }
         
     } catch (error) {
-        return res.status(500).json({success: false, message: "Failed to update."})
+        return res.status(500).json({success: false, message: "Internal server error. Please try again later."})
     }
 }
