@@ -24,6 +24,6 @@ export const restrict = roles => async (req, res, next) => {
         next()
 
     } catch (error) {
-        return res.status(500).json({success: false, message: "Server error. Please try again later."})
+        return res.status(500).json({success: false, message: "Internal server error. Please try again later."})
     }
 }

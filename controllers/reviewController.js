@@ -8,7 +8,7 @@ export const fetchReviews = async (req, res) => {
     try {
         const retrievedreviews = await reviewSchema.find({}) 
 
-        if (reviews.length === 0) {
+        if (retrievedreviews.length === 0) {
             return res.status(404).json({success: false, message: "Reviews Not Found."})
         } 
 
@@ -27,15 +27,18 @@ export const submitReview = async (req, res) => {
 
     try {
 
-        if (!req.body.doctorId) req.body.doctorId = req.params.doctorId
-        if (!req.body.patientId) req.body.patientId = req.patientId  // This value created through verify token procedure
+        if (!req.body.doctorId) req.body.doctor = req.params.doctorId
+        if (!req.body.userId) req.body.patient = req.userId  // This value created through verify token procedure
     
-        const submitedReview = new ReviewSchema(req.body)
 
 
-        if (!req.body.doctorId || !req.body.patientId) {
+
+        if (!req.body.doctor || !req.body.patient) {
             return res.status(400).json({success: false, message: "Doctor and patient information are required to submit a review."})
         }
+
+        const submitedReview = new ReviewSchema(req.body)
+
 
         const savedReview = await submitedReview.save()
 

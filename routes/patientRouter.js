@@ -15,7 +15,7 @@ router.get('/fetchPatients', fetchPatients)
 
 
 router.get('/fetchPatient/:patientId', verifyToken, fetchPatient)  // Here we should restrict to only admin
-router.delete('/deletePatient/:patientId', deletePatient)         // restrict for only patient
-router.patch('/updatePatient/:patientId', updatePatient)           // restrict for only patient
+router.delete('/deletePatient/:patientId', verifyToken, deletePatient)   // restrict for noly patient. Also the admin should has the permission to delete
+router.patch('/updatePatient/:patientId', verifyToken, updatePatient)   // restrict for noly patient. Also the admin should has the permission to update
 
 export default router

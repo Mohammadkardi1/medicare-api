@@ -42,7 +42,6 @@ app.use(cors(corsOptions))
 app.use('/api/auth', authRouter)
 app.use('/api/patient', patientRouter)
 app.use('/api/doctor', doctorRouter)
-app.use('/api/review', reviewRouter)
 
 
 // Start the server
