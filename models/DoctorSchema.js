@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"
 
 const DoctorSchema = new mongoose.Schema({
   email: {type: String, required: true, unique: true },
@@ -21,6 +21,6 @@ const DoctorSchema = new mongoose.Schema({
   totalRating: {type: Number, default: 0,},
   isApproved: {type: String, enum: ["pending", "approved", "cancelled"], default: "pending"},
   appointments: [{ type: mongoose.Types.ObjectId, ref: "Appointment" }],
-});
+})
 
 export default mongoose.model("Doctor", DoctorSchema)

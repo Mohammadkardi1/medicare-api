@@ -33,7 +33,7 @@ export const fetchDoctors = async (req, res) => {
 export const fetchDoctor = async (req, res) => {
     const doctorId = req.params.doctorId
     try {
-        const doctor = await DoctorSchema.findById(doctorId).select("-password")
+        const doctor = await DoctorSchema.findById(doctorId).populate("reviews").select("-password")
 
         if (!doctor) {
             return res.status(404).json({success: true, message: "Doctor Not Found."})

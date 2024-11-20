@@ -42,7 +42,7 @@ export const submitReview = async (req, res) => {
 
         const savedReview = await submitedReview.save()
 
-        await DoctorSchema.findByIdAndUpdate(req.body.doctorId, {
+        await DoctorSchema.findByIdAndUpdate(req.body.doctor, {
             $push: {reviews: savedReview._id}
         })
 
