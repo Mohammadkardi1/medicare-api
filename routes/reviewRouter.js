@@ -1,10 +1,16 @@
 import express from "express"
-import { addReview, fetchReviews } from './../controllers/reviewController.js';
+import { submitReview, fetchReviews } from './../controllers/reviewController.js';
 
 const router = express.Router()
 
 router.get('/fetchReviews', fetchReviews)
-router.post('/addReview', addReview)
+router.post('/submitReview', submitReview)
+
+
+router 
+    .route("/")
+    .get(fetchReviews)
+    .post(authenticate, restrict(["patient"]), submitReview)
 
 
 export default router

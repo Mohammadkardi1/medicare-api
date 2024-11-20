@@ -38,14 +38,14 @@ export const register = async (req, res) => {
         let user = null
         const userModel = role === 'patient' ? PatientSchema : role === 'doctor' ? DoctorSchema : null
 
-        if (userModel) {
-            user = new userModel({ name, email, password: hashPassword, role, gender })
-            await user.save()
-        } else {
-            return res.status(400).json({ success: false, message: 'Invalid role.' })
+        if (!userModel) {
+            return res.status(400).json({ success: false, message: 'Invalid role.'})
         }
 
-        return res.status(200).json({success: true, message: 'You have been registered successfully.'})
+        user = new userModel({ name, email, password: hashPassword, role, gender })
+        await user.save()
+
+        return res.status(201).json({success: true, message: 'You have been registered successfully.'})
 
     } catch (error) {
 
