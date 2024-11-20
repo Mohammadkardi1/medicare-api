@@ -28,7 +28,7 @@ export const submitReview = async (req, res) => {
     try {
 
         if (!req.body.doctorId) req.body.doctorId = req.params.doctorId
-        if (!req.body.patientId) req.body.patientId = req.patientId
+        if (!req.body.patientId) req.body.patientId = req.patientId  // This value created through verify token procedure
     
         const submitedReview = new ReviewSchema(req.body)
 

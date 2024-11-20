@@ -13,7 +13,7 @@ export const verifyToken = (req, res, next) => {
   
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
-        req.userId = decoded.id
+        req.patientId = decoded.id
         req.role = decoded.role
         next()
 
