@@ -4,12 +4,12 @@ import Jwt  from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 
 
-const generateToken = (user) => {
-    return Jwt.sign(
-        {id: user._id, name: user.name, role: user.role},
-        process.env.JWT_SECRET_KEY, 
-        {expiresIn: '24h'}
-)}
+// const generateToken = (user) => {
+//     return Jwt.sign(
+//         {id: user._id, name: user.name, role: user.role},
+//         process.env.JWT_SECRET_KEY, 
+//         {expiresIn: '24h'}
+// )}
 
 // API register endpoint
 export const register = async (req, res) => {
@@ -79,8 +79,13 @@ export const login = async (req, res) => {
             return res.status(400).json({status: false, message: "Invalid credentials."})
         }
 
+
+        // Generate the token using the instance method
+        const token = user.generateToken()
+
+                
         // get toke
-        const token = generateToken(user)
+        // const token = generateToken(user)
 
         const {password, role, appointments, ...rest} = user._doc
 
