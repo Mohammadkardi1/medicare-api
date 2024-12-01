@@ -5,10 +5,10 @@ const DoctorSchema = new mongoose.Schema({
   email: {type: String, required: true, unique: true },
   password: {type: String, required: true },
   name: {type: String, required: true },
-  phone: {type: Number },
+  // phone: {type: Number },
   photo: {type: String },
   ticketPrice: {type: Number },
-  role: {type: String,},
+  role: {type: String, default: "patient"},
 
   // Fields for doctors only
   specialization: {type: String },

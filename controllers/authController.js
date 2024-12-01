@@ -2,6 +2,8 @@ import PatientSchema from '../models/PatientSchema.js'
 import DoctorSchema from '../models/DoctorSchema.js'
 import Jwt  from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
+import { nameValidator, emailValidator, passwordValidator } from '../utils/validator.js'
+
 
 
 // const generateToken = (user) => {
@@ -13,7 +15,27 @@ import bcrypt from 'bcryptjs'
 
 // API register endpoint
 export const register = async (req, res) => {
-    const {name, email, password, role, gender} = req.body
+    const {name, email, password, role} = req.body
+
+
+    if (!name || !email || !password || !role) {
+        return res.status(400).json({message:"Required fields are missing"})
+    }
+
+
+    if (!nameValidator(name.trim())) {
+        return res.status(400).json({message: 'Name must be alphanumeric at least 4 characters long'})
+    }
+
+    if (!emailValidator(email)) {
+        return res.status(400).json({message: "Email is not valid"})
+    }
+
+    if (!passwordValidator(password)) {
+        return res.status(400).json({message: 'Password is not strong enough'})
+    }
+
+
 
     try {
         const [patient, doctor] = await Promise.all([
@@ -39,17 +61,17 @@ export const register = async (req, res) => {
         const userModel = role === 'patient' ? PatientSchema : role === 'doctor' ? DoctorSchema : null
 
         if (!userModel) {
-            return res.status(400).json({ success: false, message: 'Invalid role.'})
+            return res.status(400).json({ success: false, message: 'Invalid role'})
         }
 
-        user = new userModel({ name, email, password: hashPassword, role, gender })
+        user = new userModel({...req.body, name: name.trim(),  password: hashPassword })
         await user.save()
 
-        return res.status(201).json({success: true, message: 'You have been registered successfully.'})
+        return res.status(201).json({success: true, message: 'You have been registered successfully'})
 
     } catch (error) {
 
-        return res.status(500).json({success:false, message: "Internal server error. Please try again later."})
+        return res.status(500).json({success:false, message: "Internal server error. Please try again later"})
     }
 }
 
