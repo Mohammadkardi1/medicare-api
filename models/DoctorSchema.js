@@ -22,6 +22,7 @@ const DoctorSchema = new mongoose.Schema({
   totalRating: {type: Number, default: 0,},
   isApproved: {type: String, enum: ["pending", "approved", "cancelled"], default: "pending"},
   appointments: [{ type: mongoose.Types.ObjectId, ref: "Appointment" }],
+  verified: {type: Boolean, default: false},
 })
 
 // Instance method for generating a JWT token

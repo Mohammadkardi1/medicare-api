@@ -32,8 +32,7 @@ reviewSchema.statics.calcAverageRatings = async function (doctorId) {
     } }
   ])
 
-  // [{ "_id": "doctorId", "numberOfRating": 10, "avgRating": 4.5 }]
-  console.log(stats)
+  // console.log(stats)    [{ "_id": "doctorId", "numberOfRating": 10, "avgRating": 4.5 }]
 
 
   if (stats.length > 0) {
