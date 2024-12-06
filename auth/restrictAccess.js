@@ -1,5 +1,5 @@
-import PatientSchema from '../models/PatientSchema.js'
-import DoctorSchema from '../models/DoctorSchema.js'
+import patientSchema from '../models/patientSchema.js'
+import doctorSchema from '../models/doctorSchema.js'
 
 export const restrict = roles => async (req, res, next) => {
 
@@ -7,8 +7,8 @@ export const restrict = roles => async (req, res, next) => {
         const patientId = req.patientId
 
         const [patient, doctor] = await Promise.all([
-            PatientSchema.findById(patientId),
-            DoctorSchema.findById(patientId)
+            patientSchema.findById(patientId),
+            doctorSchema.findById(patientId)
         ])
 
         const user = patient || doctor

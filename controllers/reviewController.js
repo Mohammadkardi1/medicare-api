@@ -1,6 +1,5 @@
-import DoctorSchema from '../models/DoctorSchema.js'
-import ReviewSchema from '../models/ReviewSchema.js'
-import reviewSchema from '../models/ReviewSchema.js'
+import doctorSchema from '../models/doctorSchema.js'
+import reviewSchema from '../models/reviewSchema.js'
 
 
 export const fetchReviews = async (req, res) => {
@@ -37,12 +36,12 @@ export const submitReview = async (req, res) => {
             return res.status(400).json({success: false, message: "Doctor and patient information are required to submit a review."})
         }
 
-        const submitedReview = new ReviewSchema(req.body)
+        const submitedReview = new reviewSchema(req.body)
 
 
         const savedReview = await submitedReview.save()
 
-        await DoctorSchema.findByIdAndUpdate(req.body.doctor, {
+        await doctorSchema.findByIdAndUpdate(req.body.doctor, {
             $push: {reviews: savedReview._id}
         })
 

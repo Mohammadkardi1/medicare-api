@@ -1,14 +1,17 @@
-import PatientSchema from '../models/PatientSchema.js'
-import DoctorSchema from '../models/DoctorSchema.js'
-import Jwt  from 'jsonwebtoken'
+import patientSchema from '../models/patientSchema.js'
+import doctorSchema from '../models/doctorSchema.js'
+import tokenSchema from '../models/tokenSchema.js'
 import bcrypt from 'bcryptjs'
 import { nameValidator, emailValidator, passwordValidator } from '../utils/validator.js'
-
+import sendEmail from './../utils/sendEmail.js'
+import crypto from 'crypto' 
 
 
 
 // API register endpoint
 export const register = async (req, res) => {
+
+
     const {name, email, password, role} = req.body
 
 
@@ -29,8 +32,8 @@ export const register = async (req, res) => {
 
     try {
         const [patient, doctor] = await Promise.all([
-            PatientSchema.findOne({email}),
-            DoctorSchema.findOne({email})
+            patientSchema.findOne({email}),
+            doctorSchema.findOne({email})
         ])
 
         const isUserExists = patient || doctor
@@ -48,7 +51,7 @@ export const register = async (req, res) => {
 
 
         let user = null
-        const userModel = role === 'patient' ? PatientSchema : role === 'doctor' ? DoctorSchema : null
+        const userModel = role === 'patient' ? patientSchema : role === 'doctor' ? doctorSchema : null
 
         if (!userModel) {
             return res.status(400).json({ success: false, message: 'Invalid role'})
@@ -57,7 +60,31 @@ export const register = async (req, res) => {
         user = new userModel({...req.body, name: name.trim(),  password: hashPassword })
         await user.save()
 
-        return res.status(201).json({success: true, message: 'You have been registered successfully'})
+
+
+        const verifiedToken = await tokenSchema.create({
+			userId: user._id,
+			token: crypto.randomBytes(32).toString("hex"),
+		})
+
+
+        const url = `${process.env.BASE_URL}/api/auth/${user.role}/${user._id}/verify/${verifiedToken.token}`
+        const htmlMessage = `
+                <div>Hallo ${user.name},</div>
+                <div>
+                    <br>
+                    <P> Please Click on the link to verify your email address: </P>
+                    <br>
+                    <p>${url}</p>
+                </div>`
+
+		await sendEmail(user.email, "Account Verification", htmlMessage)
+
+
+
+		return res.status(400).send({ message: "Registration successful! Please check your email to verify your account" })
+
+
 
     } catch (error) {
 
@@ -76,8 +103,8 @@ export const login = async (req, res) => {
     try {
 
         const [patient, doctor] = await Promise.all([
-            PatientSchema.findOne({email}),
-            DoctorSchema.findOne({email})
+            patientSchema.findOne({email}),
+            doctorSchema.findOne({email})
         ])
 
         const user = patient || doctor
@@ -105,5 +132,42 @@ export const login = async (req, res) => {
         return res.status(200).json({status: true, message:"You have been logged in Successfully", token, data:{...rest}, role})
     } catch (error) {
         return res.status(500).json({status: false, message:"Internal server error. Please try again later"})
+    }
+}
+
+
+
+
+export const verifyEmail = async (req, res) => {
+    try {
+        const userModel = req.params.role === "doctor" ? doctorSchema : patientSchema
+        const existingUser = await userModel.findOne({ _id: req.params.userId })
+
+
+        
+        if (!existingUser) {
+            return res.status(400).json({ message: "Invalid or expired token. Please request a new link to proceed." })
+        }
+
+
+        const existingToken = await tokenSchema.findOne({
+            userId: req.params.userId,
+            token: req.params.token,
+        })
+        if (!existingToken) {
+            return res.status(400).send({ message: "Invalid or expired token. Please request a new link to proceed." })
+        }
+
+
+
+        await userModel.findByIdAndUpdate(existingUser._id, {verified: true })
+        await tokenSchema.findByIdAndDelete(existingToken._id)
+
+
+        return res.status(200).send({ message: "Email verified successfully! Please Log in." })
+
+
+    } catch (error) {
+        res.status(500).send({ message: "Internal Server Error" });
     }
 }

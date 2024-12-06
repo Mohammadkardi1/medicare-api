@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 import  Jwt  from 'jsonwebtoken';
 
-const DoctorSchema = new mongoose.Schema({
+const doctorSchema = new mongoose.Schema({
   email: {type: String, required: true, unique: true },
   password: {type: String, required: true },
   name: {type: String, required: true },
@@ -26,13 +26,12 @@ const DoctorSchema = new mongoose.Schema({
 })
 
 // Instance method for generating a JWT token
-DoctorSchema.methods.generateToken = function () {
+doctorSchema.methods.generateToken = function () {
   const payload = {
     id: this._id,
     name: this.name,
     role: this.role
   }
-
   return Jwt.sign(payload, process.env.JWT_SECRET_KEY, {expiresIn: '6h'})
 }
 
@@ -40,4 +39,4 @@ DoctorSchema.methods.generateToken = function () {
 
 
 
-export default mongoose.model("Doctor", DoctorSchema)
+export default mongoose.model("Doctor", doctorSchema)

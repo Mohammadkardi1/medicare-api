@@ -1,4 +1,4 @@
-import DoctorSchema from '../models/DoctorSchema.js'
+import doctorSchema from '../models/doctorSchema.js'
 
 
 export const fetchDoctors = async (req, res) => {
@@ -9,12 +9,12 @@ export const fetchDoctors = async (req, res) => {
     try {
 
         if (query) {
-            retrievedDoctors = await DoctorSchema.find({
+            retrievedDoctors = await doctorSchema.find({
                 isApproved: "approved",
                 $or: [{name: {$regex: query, $options: "i"}}, {specialization: {$regex: query, $option: "i"}}]
             }).select("-password")
         } else {
-            retrievedDoctors = await DoctorSchema.find({isApproved: "approved"}).select("-password")
+            retrievedDoctors = await doctorSchema.find({isApproved: "approved"}).select("-password")
         }
 
         if (retrievedDoctors.length === 0 ) {
@@ -33,7 +33,7 @@ export const fetchDoctors = async (req, res) => {
 export const fetchDoctor = async (req, res) => {
     const doctorId = req.params.doctorId
     try {
-        const doctor = await DoctorSchema.findById(doctorId).populate("reviews").select("-password")
+        const doctor = await doctorSchema.findById(doctorId).populate("reviews").select("-password")
 
         if (!doctor) {
             return res.status(404).json({success: true, message: "Doctor Not Found."})
@@ -51,7 +51,7 @@ export const fetchDoctor = async (req, res) => {
 export const deleteDoctor = async (req, res) => {
     const doctorId = req.params.doctorId
     try {
-        await DoctorSchema.findByIdAndDelete(doctorId)
+        await doctorSchema.findByIdAndDelete(doctorId)
 
         return res.status(200).json({success: true, messsage: "The doctor document has been deleted Successfully."})
     } catch (error) {
@@ -65,7 +65,7 @@ export const updateDoctor = async (req, res) => {
 
     const doctorId = req.params.doctorId
     try {
-        const updateDoctor = await DoctorSchema.findByIdAndUpdate(doctorId, {$set: req.body}, {new: true}).select('-passwoed')
+        const updateDoctor = await doctorSchema.findByIdAndUpdate(doctorId, {$set: req.body}, {new: true}).select('-passwoed')
 
 
         if (!updateDoctor) {
