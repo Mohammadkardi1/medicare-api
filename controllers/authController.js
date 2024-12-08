@@ -107,27 +107,32 @@ export const login = async (req, res) => {
             doctorSchema.findOne({email})
         ])
 
-        const user = patient || doctor
+        const existingUser = patient || doctor
         
 
         // Check if the user exsits in Database
-        if (!user) {
+        if (!existingUser) {
             return res.status(404).json({success: false, message: "User not found! Please Sign up"})
         }
 
         // Compare password
-        const isPasswordMatch = await bcrypt.compare(req.body.password, user.password)
+        const isPasswordMatch = await bcrypt.compare(req.body.password, existingUser.password)
 
         if (!isPasswordMatch) {
             return res.status(400).json({status: false, message: "The password you entered is incorrect"})
         }
 
 
+        if (!existingUser.verified) {   
+			return res.status(400).send({ message: "Your account has not verified yet. Please check your email for a verification link." })
+        }
+
+
         // Generate the token using the instance method
-        const token = user.generateToken()
+        const token = existingUser.generateToken()
 
 
-        const {password, role, appointments, ...rest} = user._doc
+        const {password, role, appointments, ...rest} = existingUser._doc
 
         return res.status(200).json({status: true, message:"You have been logged in Successfully", token, data:{...rest}, role})
     } catch (error) {
@@ -139,36 +144,33 @@ export const login = async (req, res) => {
 
 
 export const verifyEmail = async (req, res) => {
-
-    console.log("Hallo verify Email ")
     try {
         const userModel = req.params.role === "doctor" ? doctorSchema : patientSchema
         const existingUser = await userModel.findOne({ _id: req.params.id })
 
-
         
         if (!existingUser) {
-            return res.status(400).json({ message: "Invalid or expired token. Please request a new link to proceed." })
+            return res.status(404).json({ message: "User Not Found." })
         }
 
+        if (existingUser.verified) {
+            return res.status(200).send({ message: "Email verified successfully! Please Log in." })
+        }
 
         const existingToken = await tokenSchema.findOne({
             userId: req.params.id,
             token: req.params.token,
         })
+
+
         if (!existingToken) {
-            return res.status(400).send({ message: "Invalid or expired token. Please request a new link to proceed." })
+            return res.status(404).send({ message: "Invalid or expired token. Please request a new link to proceed." })
         }
-
-
 
         await userModel.findByIdAndUpdate(existingUser._id, {verified: true })
         await tokenSchema.findByIdAndDelete(existingToken._id)
 
-
         return res.status(200).send({ message: "Email verified successfully! Please Log in." })
-
-
     } catch (error) {
         res.status(500).send({ message: "Internal Server Error" });
     }
