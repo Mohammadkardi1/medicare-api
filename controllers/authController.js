@@ -66,9 +66,9 @@ export const register = async (req, res) => {
 			userId: user._id,
 			token: crypto.randomBytes(32).toString("hex"),
 		})
+ 
 
-
-        const url = `${process.env.BASE_URL}/api/auth/${user.role}/${user._id}/verify/${verifiedToken.token}`
+        const url = `${process.env.CLIENT_BASE_URL}/api/auth/${user.role}/${user._id}/verify/${verifiedToken.token}`
         const htmlMessage = `
                 <div>Hallo ${user.name},</div>
                 <div>
@@ -139,9 +139,11 @@ export const login = async (req, res) => {
 
 
 export const verifyEmail = async (req, res) => {
+
+    console.log("Hallo verify Email ")
     try {
         const userModel = req.params.role === "doctor" ? doctorSchema : patientSchema
-        const existingUser = await userModel.findOne({ _id: req.params.userId })
+        const existingUser = await userModel.findOne({ _id: req.params.id })
 
 
         
@@ -151,7 +153,7 @@ export const verifyEmail = async (req, res) => {
 
 
         const existingToken = await tokenSchema.findOne({
-            userId: req.params.userId,
+            userId: req.params.id,
             token: req.params.token,
         })
         if (!existingToken) {
