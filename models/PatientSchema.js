@@ -20,7 +20,8 @@ patientModel.methods.generateToken = function () {
   const payload = {
       id: this._id, 
       name: this.name, 
-      role: this.role
+      role: this.role,
+      photo: this.photo
     }
 
   return Jwt.sign(payload, process.env.JWT_SECRET_KEY, {expiresIn: '6h'})

@@ -97,7 +97,7 @@ export const login = async (req, res) => {
     const {email, password} = req.body
 
     if (!email || !password) {
-        return  res.status(400).json({message: "Required fields are missing."})
+        return  res.status(400).json({message: "Required fields are missing"})
     }
 
     try {
@@ -124,7 +124,7 @@ export const login = async (req, res) => {
 
 
         if (!existingUser.verified) {   
-			return res.status(400).send({ message: "Your account has not verified yet. Please check your email for a verification link." })
+			return res.status(400).send({ message: "Your account has not verified yet. Please check your email for a verification link" })
         }
 
 
@@ -154,7 +154,7 @@ export const verifyEmail = async (req, res) => {
         }
 
         if (existingUser.verified) {
-            return res.status(200).send({ message: "Email verified successfully! Please Log in." })
+            return res.status(200).send({ message: "Email verified successfully! Please Log in" })
         }
 
         const existingToken = await tokenSchema.findOne({
@@ -164,13 +164,13 @@ export const verifyEmail = async (req, res) => {
 
 
         if (!existingToken) {
-            return res.status(404).send({ message: "Invalid or expired token. Please request a new link to proceed." })
+            return res.status(404).send({ message: "Invalid or expired token. Please request a new link to proceed" })
         }
 
         await userModel.findByIdAndUpdate(existingUser._id, {verified: true })
         await tokenSchema.findByIdAndDelete(existingToken._id)
 
-        return res.status(200).send({ message: "Email verified successfully! Please Log in." })
+        return res.status(200).send({ message: "Email verified successfully! Please Log in" })
     } catch (error) {
         res.status(500).send({ message: "Internal Server Error" });
     }
