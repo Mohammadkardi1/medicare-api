@@ -134,7 +134,7 @@ export const login = async (req, res) => {
 
         const {password, role, appointments, ...rest} = existingUser._doc
 
-        return res.status(200).json({status: true, message:"You have been logged in Successfully", token, data:{...rest}, role})
+        return res.status(200).json({status: true, message:"You have been logged in Successfully", token, data:{role, ...rest}, role})
     } catch (error) {
         return res.status(500).json({status: false, message:"Internal server error. Please try again later"})
     }
@@ -154,7 +154,7 @@ export const verifyEmail = async (req, res) => {
         }
 
         if (existingUser.verified) {
-            return res.status(200).send({ message: "Email verified successfully! Please Log in" })
+            return res.status(400).send({ message: "Email have already verified! Please Log in" })
         }
 
         const existingToken = await tokenSchema.findOne({

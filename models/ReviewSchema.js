@@ -32,8 +32,6 @@ reviewSchema.statics.calcAverageRatings = async function (doctorId) {
     } }
   ])
 
-  // console.log(stats)    [{ "_id": "doctorId", "numberOfRating": 10, "avgRating": 4.5 }]
-
 
   if (stats.length > 0) {
     await DoctorSchema.findByIdAndUpdate(doctorId, {

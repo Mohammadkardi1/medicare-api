@@ -10,8 +10,6 @@ export const fetchPatients = async (req, res) => {
         }
 
         return res.status(200).json({success: true, message: "The patients' documents have been retrieved Successfully.", data: patients})
-
-
     } catch (error) {
         console.error("Error fetching patients:", error.message)
         return res.status(500).json({success: false, message: "Internal server error. Please try again later."})
@@ -69,3 +67,12 @@ export const updatePatient = async (req, res) => {
         return req.status(500).json({success: false, message: "Internal server error. Please try again later."})
     }
 }
+
+
+// export const getMyAppointments = async(req, res) => {
+//     try {
+        
+//     } catch (error) {
+        
+//     }
+// }

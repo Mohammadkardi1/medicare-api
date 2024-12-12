@@ -19,9 +19,6 @@ const sendEmail = async (recipient, subject, message) => {
             subject: subject,
             html: message   
         })
-
-
-        console.log("Email sent successfully:", info.response);
     } catch (error) {
         console.log(error.message)
     }
