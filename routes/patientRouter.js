@@ -1,7 +1,6 @@
 import express from 'express'
 import { deletePatient, fetchPatients, fetchPatient, updatePatient } from '../controllers/patientController.js'
-import { verifyToken } from '../auth/verifyToken.js'
-import { restrict } from '../auth/restrictAccess.js'
+import { verifyToken } from '../middleware/verifyToken.js'
 
 
 const router = express.Router()

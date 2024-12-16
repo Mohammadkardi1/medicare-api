@@ -1,14 +1,14 @@
 import patientSchema from '../models/patientSchema.js'
 import doctorSchema from '../models/doctorSchema.js'
 
-export const restrict = roles => async (req, res, next) => {
+export const restrictAccess = roles => async (req, res, next) => {
 
     try {
-        const patientId = req.patientId
+        const userId = req.userId
 
         const [patient, doctor] = await Promise.all([
-            patientSchema.findById(patientId),
-            doctorSchema.findById(patientId)
+            patientSchema.findById(userId),
+            doctorSchema.findById(userId)
         ])
 
         const user = patient || doctor
