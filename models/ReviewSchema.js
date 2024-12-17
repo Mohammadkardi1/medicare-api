@@ -21,9 +21,9 @@ reviewSchema.pre(/^find/, function (next) {
 })
 
 
-reviewSchema.statics.calcAverageRatings = async function (doctorId) {
+reviewSchema.statics.calcAverageRatings = async function (doctorID) {
   const stats = await this.aggregate([
-    { $match: { doctor: doctorId } }, 
+    { $match: { doctor: doctorID } }, 
     
     { $group: { 
       _id: "$doctor",  // creates a field called numberOfRating
@@ -34,13 +34,13 @@ reviewSchema.statics.calcAverageRatings = async function (doctorId) {
 
 
   if (stats.length > 0) {
-    await DoctorSchema.findByIdAndUpdate(doctorId, {
+    await DoctorSchema.findByIdAndUpdate(doctorID, {
       totalRating: stats[0].numberOfRating,
       averageRating: stats[0].avgRating
     })
   } else {
     // If there are no reviews left, set default values
-    await DoctorSchema.findByIdAndUpdate(doctorId, {
+    await DoctorSchema.findByIdAndUpdate(doctorID, {
       totalRating: 0,
       averageRating: 0
     })

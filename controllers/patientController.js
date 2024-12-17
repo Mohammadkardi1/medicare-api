@@ -19,9 +19,9 @@ export const fetchPatients = async (req, res) => {
 // fetchPatientById
 export const fetchPatient = async (req, res) => {
 
-    const patientId = req.params.patientId
+    const patientID = req.params.patientID
     try {
-        const patient = await patientSchema.findById(patientId).select("-password")
+        const patient = await patientSchema.findById(patientID).select("-password")
 
         if (!patient) {
             return res.status(404).json({success: false, message: "Patient Not Found."})
@@ -36,9 +36,13 @@ export const fetchPatient = async (req, res) => {
 }
 
 export const deletePatient = async (req, res) => {
-    const patientId = req.params.patientId
+    const patientID = req.params.patientID
     try {
-        await patientSchema.findByIdAndDelete(patientId)
+        const deletedPatient = await patientSchema.findByIdAndDelete(patientID)
+
+        if (!deletedPatient) {
+            return res.status(404).json({success: true, message: "Patient Not Found."})
+        }
 
         return res.status(200).json({success: true, messsage: "The doctor document has been deleted Successfully."})
     } catch (error) {
@@ -50,10 +54,10 @@ export const deletePatient = async (req, res) => {
 
 
 export const updatePatient = async (req, res) => {
-    const patientId = req.params.patientId 
+    const patientID = req.params.patientID 
 
     try {
-        const updatedPatient = await patientSchema.findByIdAndUpdate(patientId, {$set: req.body}, {new: true}).select("-password")
+        const updatedPatient = await patientSchema.findByIdAndUpdate(patientID, {$set: req.body}, {new: true}).select("-password")
 
         if (!updatedPatient) {
             return res.status(404).json({success: false, message: "Patient Not Found."})

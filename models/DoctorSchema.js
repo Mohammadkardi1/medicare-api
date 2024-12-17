@@ -9,12 +9,13 @@ const doctorSchema = new mongoose.Schema({
   photo: {type: String },
   ticketPrice: {type: Number, },
   role: {type: String, default: "patient"},
+  gender: { type: String, enum: ["Male", "Female", "Other"] },
 
   // Fields for doctors only
   specialization: {type: String, default: "" },
   qualifications: {type: Array,},
   experiences: {type: Array,},
-  bio: {type: String, maxLength: 50, },
+  bio: {type: String, maxLength: 100, },
   about: {type: String,},
   timeSlots: {type: Array },
   reviews: [{type: mongoose.Types.ObjectId, ref: "Review" }],
