@@ -8,7 +8,7 @@ const patientModel = new mongoose.Schema({
   // phone: { type: Number },
   photo: { type: String },
   role: {type: String, enum: ["patient", "admin"], default: "patient"},
-  gender: { type: String, enum: ["male", "female", "other"] },
+  gender: { type: String, enum: ["Male", "Female", "Other"] },
   bloodType: { type: String },
   appointments: [{ type: mongoose.Types.ObjectId, ref: "Appointment" }],
   verified: { type: Boolean, default: false},

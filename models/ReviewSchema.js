@@ -1,10 +1,12 @@
 import mongoose from "mongoose"
 import DoctorSchema from "./doctorSchema.js"
+import PatientSchema from "./patientSchema.js"
 
 const reviewSchema = new mongoose.Schema(
   {
     doctor: {type: mongoose.Types.ObjectId, ref: "Doctor",},
-    patient : {type: mongoose.Types.ObjectId, ref: "Patient",},
+    reviewer: { type: mongoose.Types.ObjectId, refPath: "reviewerRole" }, // Generic reference for reviewer
+    reviewerRole: { type: String, required: true, enum: ["Doctor", "Patient"] },
     reviewText: {type: String, required: true,},
     rating: {type: Number, required: true, min: 0, max: 5, default: 0,},
   },
@@ -14,8 +16,8 @@ const reviewSchema = new mongoose.Schema(
 // Schema Middleware
 reviewSchema.pre(/^find/, function (next) {
   this.populate({
-    path: "patient",    // Specifies the field in the reviewSchema that references another document.
-    select: "name photo"    // Only retrieves the name and photo fields from the related user document, excluding all other fields.
+    path: "reviewer",
+    select: "name photo",
   })
   next()
 })

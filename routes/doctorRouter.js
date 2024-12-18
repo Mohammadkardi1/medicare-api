@@ -10,8 +10,8 @@ const router = express.Router()
 router.use('/:doctorID/review', reviewRouter)
 
 // Define routes for handling doctor-related operations 
-router.get('/fetchDoctors', restrictAccess(["doctor", "patient"]), verifyToken, fetchDoctors)  // here add a verify token and restrict access 
-router.get('/fetchDoctor/:doctorID', verifyToken, restrictAccess(["doctor", "patient"]), fetchDoctor)
+router.get('/fetchDoctors', fetchDoctors)  // here add a verify token and restrict access 
+router.get('/fetchDoctor/:doctorID', fetchDoctor)
 router.delete('/deleteDoctor/:doctorID', verifyToken, restrictAccess(["doctor"]), deleteDoctor) // restrict for noly doctor. Also the admin should has the permission to delete
 router.patch('/updateDoctor/:doctorID', verifyToken, restrictAccess(["doctor"]), updateDoctor) // restrict for only doctor. Also the admin should has the permission to update
 

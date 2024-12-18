@@ -5,7 +5,6 @@ import jwt from 'jsonwebtoken'
 
 export const verifyToken = (req, res, next) => {
 
-
     try {
         const token = req.header('authorization')?.replace('Bearer ', '')
   
@@ -17,6 +16,7 @@ export const verifyToken = (req, res, next) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
         req.userId = decoded.id
         req.role = decoded.role
+
         next()
 
     } catch (error) {

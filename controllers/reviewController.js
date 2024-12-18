@@ -25,15 +25,23 @@ export const fetchReviews = async (req, res) => {
 export const submitReview = async (req, res) => {
 
     try {
+        if (!req.body.doctor) {
+            req.body.doctor = req.params.doctorID
+        }
 
-        if (!req.body.doctorID) req.body.doctor = req.params.doctorID
-        if (!req.body.userId) req.body.patient = req.userId  // This value created through verify token procedure
-    
+        if (!req.body.userId) {
+            req.body.reviewer = req.userId
+        }
+
+
+        if (!req.body.role) {
+            req.body.reviewerRole = req.role === 'doctor' ? 'Doctor' : 'Patient'
+        }
 
 
 
-        if (!req.body.doctor || !req.body.patient) {
-            return res.status(400).json({success: false, message: "Doctor and patient information are required to submit a review."})
+        if (!req.body.doctor || !req.body.reviewer || !req.body.reviewerRole) {
+            return res.status(400).json({success: false, message: "Doctor and reviewer information are required to submit a review."})
         }
 
         const submitedReview = new reviewSchema(req.body)
@@ -41,12 +49,11 @@ export const submitReview = async (req, res) => {
 
         const savedReview = await submitedReview.save()
 
-        await doctorSchema.findByIdAndUpdate(req.body.doctor, {
-            $push: {reviews: savedReview._id}
-        })
+        const updatedDoctor = await doctorSchema.findByIdAndUpdate(req.body.doctor, 
+            {$push: {reviews: savedReview._id}}, { new: true }).populate("reviews").select("-password")
 
         
-        return res.status(201).json({success: true, message: "The review has been submited successfully.", data: savedReview})
+        return res.status(201).json({success: true, message: "The review has been submited successfully.", data: updatedDoctor})
 
 
     } catch (error) {

@@ -5,7 +5,6 @@ export const fetchDoctors = async (req, res) => {
 
     const { query } = req.query
     let retrievedDoctors 
-
     try {
 
         if (query) {
@@ -16,6 +15,7 @@ export const fetchDoctors = async (req, res) => {
         } else {
             retrievedDoctors = await doctorSchema.find({isApproved: "approved"}).select("-password")
         }
+
 
         if (retrievedDoctors.length === 0 ) {
             return res.status(404).json({success: true, message: "Doctors Not Found", })
@@ -34,6 +34,9 @@ export const fetchDoctor = async (req, res) => {
     const doctorID = req.params.doctorID
     try {
         const doctor = await doctorSchema.findById(doctorID).populate("reviews").select("-password")
+
+
+
 
         if (!doctor) {
             return res.status(404).json({success: true, message: "Doctor Not Found."})

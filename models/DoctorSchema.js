@@ -5,11 +5,13 @@ const doctorSchema = new mongoose.Schema({
   email: {type: String, required: true, unique: true },
   password: {type: String, required: true },
   name: {type: String, required: true },
+  hospital: {type: String, },
   phone: {type: Number },
   photo: {type: String },
   ticketPrice: {type: Number, },
   role: {type: String, default: "patient"},
   gender: { type: String, enum: ["Male", "Female", "Other"] },
+  totalPatients: {type: Number, },
 
   // Fields for doctors only
   specialization: {type: String, default: "" },
@@ -21,7 +23,7 @@ const doctorSchema = new mongoose.Schema({
   reviews: [{type: mongoose.Types.ObjectId, ref: "Review" }],
   averageRating: {type: mongoose.Schema.Types.Decimal128,},
   totalRating: {type: Number,},
-  isApproved: {type: String, enum: ["pending", "approved", "cancelled"], default: "pending"},
+  isApproved: {type: String, enum: ["pending", "approved", "cancelled"], default: "approved"},
   appointments: [{ type: mongoose.Types.ObjectId, ref: "Appointment" }],
   verified: {type: Boolean, default: false},
 })
@@ -36,7 +38,6 @@ doctorSchema.methods.generateToken = function () {
   }
   return Jwt.sign(payload, process.env.JWT_SECRET_KEY, {expiresIn: '6h'})
 }
-
 
 
 
