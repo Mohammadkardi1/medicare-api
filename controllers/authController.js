@@ -84,12 +84,12 @@ export const login = async (req, res) => {
     if (!email || !password) {
         return  res.status(400).json({message: "Required fields are missing"})
     }
-
+ 
     try {
 
         const [patient, doctor] = await Promise.all([
             patientSchema.findOne({email}),
-            doctorSchema.findOne({email})
+            doctorSchema.findOne({email}).populate("reviews")
         ])
 
         const existingUser = patient || doctor
