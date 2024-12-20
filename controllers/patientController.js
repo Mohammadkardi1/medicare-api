@@ -11,7 +11,7 @@ export const fetchPatients = async (req, res) => {
 
         return res.status(200).json({success: true, message: "The patients' documents have been retrieved Successfully.", data: patients})
     } catch (error) {
-        console.error("Error fetching patients:", error.message)
+        console.log("Error fetching patients:", error.message)
         return res.status(500).json({success: false, message: "Internal server error. Please try again later."})
     }
 }
@@ -30,7 +30,7 @@ export const fetchPatient = async (req, res) => {
         return res.status(200).json({success: true, message: "The patient document has been retrieved Successfully.", data: patient})
 
     } catch (error) {
-        console.error("Error fetching patient:", error.message)
+        console.log("Error fetching patient:", error.message)
         return res.status(500).json({success: false, message: "Internal server error. Please try again later."})
     }
 }
@@ -46,7 +46,7 @@ export const deletePatient = async (req, res) => {
 
         return res.status(200).json({success: true, messsage: "The doctor document has been deleted Successfully."})
     } catch (error) {
-        console.error("Error deleting patient:", error.message)
+        console.log("Error deleting patient:", error.message)
         return res.status(500).json({success: false, message: "Internal server error. Please try again later."})
     }
 }
@@ -67,7 +67,7 @@ export const updatePatient = async (req, res) => {
 
 
     } catch (error) {
-        console.error("Error updating patient:", error.message)
+        console.log("Error updating patient:", error.message)
         return req.status(500).json({success: false, message: "Internal server error. Please try again later."})
     }
 }

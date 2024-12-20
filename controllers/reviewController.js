@@ -15,7 +15,7 @@ export const fetchReviews = async (req, res) => {
         return res.status(200).json({success: true, message: "The reviews have been retrieved Successfully.", data: retrievedreviews})
 
     } catch (error) {
-        console.error("Error fetching reviews:", error.message)
+        console.log("Error fetching reviews:", error.message)
         return res.status(500).json({success: false, message: "Internal server error. Please try again later."})
     }
 }
@@ -24,22 +24,11 @@ export const fetchReviews = async (req, res) => {
 
 export const submitReview = async (req, res) => {
 
+    if (!req.body.doctor) { req.body.doctor = req.params.doctorID }
+    if (!req.body.userId) { req.body.reviewer = req.userId }
+    if (!req.body.role) { req.body.reviewerRole = req.role === 'doctor' ? 'Doctor' : 'Patient' }
+
     try {
-        if (!req.body.doctor) {
-            req.body.doctor = req.params.doctorID
-        }
-
-        if (!req.body.userId) {
-            req.body.reviewer = req.userId
-        }
-
-
-        if (!req.body.role) {
-            req.body.reviewerRole = req.role === 'doctor' ? 'Doctor' : 'Patient'
-        }
-
-
-
         if (!req.body.doctor || !req.body.reviewer || !req.body.reviewerRole) {
             return res.status(400).json({success: false, message: "Doctor and reviewer information are required to submit a review."})
         }
@@ -57,7 +46,7 @@ export const submitReview = async (req, res) => {
 
 
     } catch (error) {
-        console.error("Error adding review:", error.message)
+        console.log("Error adding review:", error.message)
         return res.status(500).json({success: false, message: "Internal server error. Please try again later."})
     }
 }

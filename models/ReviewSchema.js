@@ -23,42 +23,42 @@ reviewSchema.pre(/^find/, function (next) {
 })
 
 
-reviewSchema.statics.calcAverageRatings = async function (doctorID) {
-  const stats = await this.aggregate([
-    { $match: { doctor: doctorID } }, 
+// reviewSchema.statics.calcAverageRatings = async function (doctorID) {
+//   const stats = await this.aggregate([
+//     { $match: { doctor: doctorID } }, 
     
-    { $group: { 
-      _id: "$doctor",  // creates a field called numberOfRating
-      numberOfRating: { $sum: 1}, 
-      avgRating: { $avg: "$rating"}  
-    } }
-  ])
+//     { $group: { 
+//       _id: "$doctor",  // creates a field called numberOfRating
+//       numberOfRating: { $sum: 1}, 
+//       avgRating: { $avg: "$rating"}  
+//     } }
+//   ])
 
 
-  if (stats.length > 0) {
-    await DoctorSchema.findByIdAndUpdate(doctorID, {
-      totalRating: stats[0].numberOfRating,
-      averageRating: stats[0].avgRating
-    })
-  } else {
-    // If there are no reviews left, set default values
-    await DoctorSchema.findByIdAndUpdate(doctorID, {
-      totalRating: 0,
-      averageRating: 0
-    })
-  }
+//   if (stats.length > 0) {
+//     await DoctorSchema.findByIdAndUpdate(doctorID, {
+//       // totalRating: stats[0].numberOfRating,
+//       averageRating: stats[0].avgRating
+//     })
+//   } else {
+//     // If there are no reviews left, set default values
+//     await DoctorSchema.findByIdAndUpdate(doctorID, {
+//       // totalRating: 0,
+//       averageRating: 0
+//     })
+//   }
 
 
-}
+// }
 
-reviewSchema.post("save", async function() {
-  await this.constructor.calcAverageRatings(this.doctor)
-})
+// reviewSchema.post("save", async function() {
+//   await this.constructor.calcAverageRatings(this.doctor)
+// })
 
 
-reviewSchema.post("findOneAndDelete", async function () {
-  await this.constructor.calcAverageRatings(doc.doctor);
-})
+// reviewSchema.post("findOneAndDelete", async function () {
+//   await this.constructor.calcAverageRatings(doc.doctor);
+// })
 
 
 
