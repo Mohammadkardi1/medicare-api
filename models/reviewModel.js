@@ -22,6 +22,9 @@ reviewSchema.pre(/^find/, function (next) {
   next()
 })
 
+const reviewModel = mongoose.model('Review', reviewSchema)
+
+export default reviewModel
 
 // reviewSchema.statics.calcAverageRatings = async function (doctorID) {
 //   const stats = await this.aggregate([
@@ -59,13 +62,3 @@ reviewSchema.pre(/^find/, function (next) {
 // reviewSchema.post("findOneAndDelete", async function () {
 //   await this.constructor.calcAverageRatings(doc.doctor);
 // })
-
-
-
-// export default mongoose.model("Review", reviewSchema)
-
-
-
-const reviewModel = mongoose.model('Review', reviewSchema)
-
-export default reviewModel

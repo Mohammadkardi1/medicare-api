@@ -39,12 +39,6 @@ doctorSchema.methods.generateToken = function () {
   return Jwt.sign(payload, process.env.JWT_SECRET_KEY, {expiresIn: '6h'})
 }
 
-
-
-
-// export default mongoose.model("Doctor", doctorSchema)
-
-
 const doctorModel = mongoose.model('Doctor', doctorSchema)
 
 export default doctorModel

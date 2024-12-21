@@ -6,11 +6,6 @@ const tokenSchema = mongoose.Schema({
 	createdAt: { type: Date, default: Date.now, expires: 6 * 60 * 60 },
 })
 
-
-
-// export default mongoose.model('Token', tokenSchema)
-
-
 const tokenModel = mongoose.model('Token', tokenSchema)
 
 export default tokenModel
