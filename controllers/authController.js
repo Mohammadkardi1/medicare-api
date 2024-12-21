@@ -1,4 +1,4 @@
-import patientSchema from '../models/patientSchema.js'
+import patientModel from '../models/patientModel.js'
 import doctorSchema from '../models/doctorSchema.js'
 import tokenSchema from '../models/tokenSchema.js'
 import bcrypt from 'bcryptjs'
@@ -27,7 +27,7 @@ export const register = async (req, res) => {
 
     try {
         const [patient, doctor] = await Promise.all([
-            patientSchema.findOne({email}),
+            patientModel.findOne({email}),
             doctorSchema.findOne({email})
         ])
 
@@ -44,7 +44,7 @@ export const register = async (req, res) => {
 
 
         let user = null
-        const userModel = role === 'patient' ? patientSchema : role === 'doctor' ? doctorSchema : null
+        const userModel = role === 'patient' ? patientModel : role === 'doctor' ? doctorSchema : null
 
         if (!userModel) {
             return res.status(400).json({ success: false, message: 'Invalid role'})
@@ -88,7 +88,7 @@ export const login = async (req, res) => {
     try {
 
         const [patient, doctor] = await Promise.all([
-            patientSchema.findOne({email}),
+            patientModel.findOne({email}),
             doctorSchema.findOne({email}).populate("reviews")
         ])
 
@@ -124,7 +124,7 @@ export const login = async (req, res) => {
 
 export const verifyEmail = async (req, res) => {
     try {
-        const userModel = req.params.role === "doctor" ? doctorSchema : patientSchema
+        const userModel = req.params.role === "doctor" ? doctorSchema : patientModel
         const existingUser = await userModel.findOne({ _id: req.params.id })
 
         

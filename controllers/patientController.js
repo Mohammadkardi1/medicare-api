@@ -1,9 +1,9 @@
-import patientSchema from '../models/patientSchema.js'
+import patientModel from '../models/patientModel.js'
 
 
 export const fetchPatients = async (req, res) => {
     try {
-        const patients = await patientSchema.find().select("-password")
+        const patients = await patientModel.find().select("-password")
 
         if (patients.length === 0) {
             return res.status(404).json({success: false, message: "Patients Not Found."})
@@ -21,7 +21,7 @@ export const fetchPatient = async (req, res) => {
 
     const patientID = req.params.patientID
     try {
-        const patient = await patientSchema.findById(patientID).select("-password")
+        const patient = await patientModel.findById(patientID).select("-password")
 
         if (!patient) {
             return res.status(404).json({success: false, message: "Patient Not Found."})
@@ -38,7 +38,7 @@ export const fetchPatient = async (req, res) => {
 export const deletePatient = async (req, res) => {
     const patientID = req.params.patientID
     try {
-        const deletedPatient = await patientSchema.findByIdAndDelete(patientID)
+        const deletedPatient = await patientModel.findByIdAndDelete(patientID)
 
         if (!deletedPatient) {
             return res.status(404).json({success: true, message: "Patient Not Found."})
@@ -57,7 +57,7 @@ export const updatePatient = async (req, res) => {
     const patientID = req.params.patientID 
 
     try {
-        const updatedPatient = await patientSchema.findByIdAndUpdate(patientID, {$set: req.body}, {new: true}).select("-password")
+        const updatedPatient = await patientModel.findByIdAndUpdate(patientID, {$set: req.body}, {new: true}).select("-password")
 
         if (!updatedPatient) {
             return res.status(404).json({success: false, message: "Patient Not Found."})

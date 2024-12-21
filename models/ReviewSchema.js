@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 import DoctorSchema from "./doctorSchema.js"
-import PatientSchema from "./patientSchema.js"
+import PatientSchema from "./patientModel.js"
 
 const reviewSchema = new mongoose.Schema(
   {

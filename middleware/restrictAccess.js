@@ -1,4 +1,4 @@
-import patientSchema from '../models/patientSchema.js'
+import patientSchema from '../models/patientModel.js'
 import doctorSchema from '../models/doctorSchema.js'
 
 export const restrictAccess = roles => async (req, res, next) => {

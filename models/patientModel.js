@@ -29,9 +29,9 @@ patientSchema.methods.generateToken = function () {
 
 
 
-export default mongoose.model("Patient", patientSchema)
+// export default mongoose.model("Patient", patientSchema)
 
 
-// const authModel = mongoose.model('auth', authSchema)
+const patientModel = mongoose.model('Patient', patientSchema)
 
-// export default authModel
+export default patientModel
