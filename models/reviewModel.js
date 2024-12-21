@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
-import DoctorSchema from "./doctorSchema.js"
-import PatientSchema from "./patientModel.js"
+// import DoctorSchema from "./doctorModel.js"
+// import PatientSchema from "./patientModel.js"
 
 const reviewSchema = new mongoose.Schema(
   {
@@ -62,4 +62,10 @@ reviewSchema.pre(/^find/, function (next) {
 
 
 
-export default mongoose.model("Review", reviewSchema)
+// export default mongoose.model("Review", reviewSchema)
+
+
+
+const reviewModel = mongoose.model('Review', reviewSchema)
+
+export default reviewModel

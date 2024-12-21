@@ -8,6 +8,9 @@ const tokenSchema = mongoose.Schema({
 
 
 
-export default mongoose.model('Token', tokenSchema)
+// export default mongoose.model('Token', tokenSchema)
 
 
+const tokenModel = mongoose.model('Token', tokenSchema)
+
+export default tokenModel

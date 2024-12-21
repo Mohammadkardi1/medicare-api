@@ -42,4 +42,9 @@ doctorSchema.methods.generateToken = function () {
 
 
 
-export default mongoose.model("Doctor", doctorSchema)
+// export default mongoose.model("Doctor", doctorSchema)
+
+
+const doctorModel = mongoose.model('Doctor', doctorSchema)
+
+export default doctorModel

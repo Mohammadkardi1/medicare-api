@@ -1,11 +1,11 @@
-import doctorSchema from '../models/doctorSchema.js'
-import reviewSchema from '../models/reviewSchema.js'
+import doctorModel from '../models/doctorModel.js'
+import reviewModel from '../models/reviewModel.js'
 
 
 export const fetchReviews = async (req, res) => {
 
     try {
-        const retrievedreviews = await reviewSchema.find({}) 
+        const retrievedreviews = await reviewModel.find({}) 
 
         if (retrievedreviews.length === 0) {
             return res.status(404).json({success: false, message: "Reviews Not Found."})
@@ -33,12 +33,12 @@ export const submitReview = async (req, res) => {
             return res.status(400).json({success: false, message: "Doctor and reviewer information are required to submit a review."})
         }
 
-        const submitedReview = new reviewSchema(req.body)
+        const submitedReview = new reviewModel(req.body)
 
 
         const savedReview = await submitedReview.save()
 
-        const updatedDoctor = await doctorSchema.findByIdAndUpdate(req.body.doctor, 
+        const updatedDoctor = await doctorModel.findByIdAndUpdate(req.body.doctor, 
             {$push: {reviews: savedReview._id}}, { new: true }).populate("reviews").select("-password")
 
         

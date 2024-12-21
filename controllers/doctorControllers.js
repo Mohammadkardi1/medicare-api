@@ -1,4 +1,4 @@
-import doctorSchema from '../models/doctorSchema.js'
+import doctorModel from '../models/doctorModel.js'
 
 
 export const fetchDoctors = async (req, res) => {
@@ -8,12 +8,12 @@ export const fetchDoctors = async (req, res) => {
     try {
 
         if (query) {
-            retrievedDoctors = await doctorSchema.find({
+            retrievedDoctors = await doctorModel.find({
                 isApproved: "approved",
                 $or: [{name: {$regex: query, $options: "i"}}, {specialization: {$regex: query, $option: "i"}}]
             }).select("-password")
         } else {
-            retrievedDoctors = await doctorSchema.find({isApproved: "approved"}).select("-password")
+            retrievedDoctors = await doctorModel.find({isApproved: "approved"}).select("-password")
         }
 
 
@@ -33,7 +33,7 @@ export const fetchDoctors = async (req, res) => {
 export const fetchDoctor = async (req, res) => {
     const doctorID = req.params.doctorID
     try {
-        const doctor = await doctorSchema.findById(doctorID).populate("reviews").select("-password")
+        const doctor = await doctorModel.findById(doctorID).populate("reviews").select("-password")
 
         if (!doctor) {
             return res.status(404).json({success: true, message: "Doctor Not Found."})
@@ -51,7 +51,7 @@ export const fetchDoctor = async (req, res) => {
 export const deleteDoctor = async (req, res) => {
     const doctorID = req.params.doctorID
     try {
-        const deletedDoctor = await doctorSchema.findByIdAndDelete(doctorID)
+        const deletedDoctor = await doctorModel.findByIdAndDelete(doctorID)
 
         if (!deletedDoctor) {
             return res.status(404).json({success: true, message: "Doctor Not Found."})
@@ -68,7 +68,7 @@ export const deleteDoctor = async (req, res) => {
 export const updateDoctor = async (req, res) => {
     const doctorID = req.params.doctorID
     try {
-        const updateDoctor = await doctorSchema.findByIdAndUpdate(doctorID, {$set: req.body}, {new: true}).select('-password')
+        const updateDoctor = await doctorModel.findByIdAndUpdate(doctorID, {$set: req.body}, {new: true}).select('-password')
 
         if (!updateDoctor) {
             return res.status(404).json({success: true, message: "Doctor Not Found."})
@@ -90,7 +90,7 @@ export const searchDoctors = async (req, res) => {
         return res.status(400).json({ success: false, error: "Doctor name is required." });
         }
 
-        const doctors = await doctorSchema.find({
+        const doctors = await doctorModel.find({
         name: { $regex: doctorName, $options: 'i' },
         })
 

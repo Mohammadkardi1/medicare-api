@@ -1,6 +1,6 @@
 import patientModel from '../models/patientModel.js'
-import doctorSchema from '../models/doctorSchema.js'
-import tokenSchema from '../models/tokenSchema.js'
+import doctorModel from '../models/doctorModel.js'
+import tokenModel from '../models/tokenModel.js'
 import bcrypt from 'bcryptjs'
 import { nameValidator, emailValidator, passwordValidator } from '../utils/validator.js'
 import sendEmail from './../utils/sendEmail.js'
@@ -28,7 +28,7 @@ export const register = async (req, res) => {
     try {
         const [patient, doctor] = await Promise.all([
             patientModel.findOne({email}),
-            doctorSchema.findOne({email})
+            doctorModel.findOne({email})
         ])
 
         const isUserExists = patient || doctor
@@ -44,7 +44,7 @@ export const register = async (req, res) => {
 
 
         let user = null
-        const userModel = role === 'patient' ? patientModel : role === 'doctor' ? doctorSchema : null
+        const userModel = role === 'patient' ? patientModel : role === 'doctor' ? doctorModel : null
 
         if (!userModel) {
             return res.status(400).json({ success: false, message: 'Invalid role'})
@@ -53,7 +53,7 @@ export const register = async (req, res) => {
         user = new userModel({...req.body, name: name.trim(),  password: hashPassword })
         await user.save()
 
-        const verifiedToken = await tokenSchema.create({
+        const verifiedToken = await tokenModel.create({
 			userId: user._id,
 			token: crypto.randomBytes(32).toString("hex"),
 		})
@@ -89,7 +89,7 @@ export const login = async (req, res) => {
 
         const [patient, doctor] = await Promise.all([
             patientModel.findOne({email}),
-            doctorSchema.findOne({email}).populate("reviews")
+            doctorModel.findOne({email}).populate("reviews")
         ])
 
         const existingUser = patient || doctor
@@ -124,7 +124,7 @@ export const login = async (req, res) => {
 
 export const verifyEmail = async (req, res) => {
     try {
-        const userModel = req.params.role === "doctor" ? doctorSchema : patientModel
+        const userModel = req.params.role === "doctor" ? doctorModel : patientModel
         const existingUser = await userModel.findOne({ _id: req.params.id })
 
         
@@ -136,7 +136,7 @@ export const verifyEmail = async (req, res) => {
             return res.status(400).send({ message: "Email have already verified! Please Log in" })
         }
 
-        const existingToken = await tokenSchema.findOne({
+        const existingToken = await tokenModel.findOne({
             userId: req.params.id,
             token: req.params.token,
         })
@@ -147,7 +147,7 @@ export const verifyEmail = async (req, res) => {
         }
 
         await userModel.findByIdAndUpdate(existingUser._id, {verified: true })
-        await tokenSchema.findByIdAndDelete(existingToken._id)
+        await tokenModel.findByIdAndDelete(existingToken._id)
 
         return res.status(200).send({ message: "Email verified successfully! Please Log in" })
     } catch (error) {
