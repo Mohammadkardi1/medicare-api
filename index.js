@@ -16,10 +16,11 @@ const CONNECTION_URL = process.env.MONGO_URL
 
 
 const corsOptions = {
+    credentials: true,
     origin: ['http://localhost:5173', 'https://airbnb-clinet.vercel.app'] 
 }
 
-
+ 
 
 // Connect to MongoDB
 mongoose.set('strictQuery', false)
