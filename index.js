@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 8000
 const CONNECTION_URL = process.env.MONGO_URL
 
 
-// 
+
 // Middleware
 app.use(cors({
     credentials: true,

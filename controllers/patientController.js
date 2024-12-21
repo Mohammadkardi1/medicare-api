@@ -16,7 +16,6 @@ export const fetchPatients = async (req, res) => {
     }
 }
 
-// fetchPatientById
 export const fetchPatient = async (req, res) => {
 
     const patientID = req.params.patientID
@@ -71,12 +70,3 @@ export const updatePatient = async (req, res) => {
         return req.status(500).json({success: false, message: "Internal server error. Please try again later."})
     }
 }
-
-
-// export const getMyAppointments = async(req, res) => {
-//     try {
-        
-//     } catch (error) {
-        
-//     }
-// }

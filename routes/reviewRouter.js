@@ -4,16 +4,11 @@ import { verifyToken } from '../middleware/verifyToken.js';
 
 const router = express.Router({mergeParams: true})
 
-// router.get('/fetchReviews', fetchReviews)
-// router.post('/submitReview', submitReview)
 
-
-
-// doctor/doctorId/review/reviewId
 router 
     .route("/")
     .get(fetchReviews)
-    .post(verifyToken, submitReview)   // post(authenticate, restrict(["patient"]), submitReview)
+    .post(verifyToken, submitReview)
 
 
 export default router

@@ -29,7 +29,6 @@ export const fetchDoctors = async (req, res) => {
     }
 }
 
-// fetchDoctorById
 export const fetchDoctor = async (req, res) => {
     const doctorID = req.params.doctorID
     try {

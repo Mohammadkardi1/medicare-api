@@ -1,11 +1,9 @@
 import mongoose from "mongoose"
-// import DoctorSchema from "./doctorModel.js"
-// import PatientSchema from "./patientModel.js"
 
 const reviewSchema = new mongoose.Schema(
   {
     doctor: {type: mongoose.Types.ObjectId, ref: "Doctor",},
-    reviewer: { type: mongoose.Types.ObjectId, refPath: "reviewerRole" }, // Generic reference for reviewer
+    reviewer: { type: mongoose.Types.ObjectId, refPath: "reviewerRole" },
     reviewerRole: { type: String, required: true, enum: ["Doctor", "Patient"] },
     reviewText: {type: String, required: true,},
     rating: {type: Number, required: true, min: 0, max: 5, default: 0,},
