@@ -40,15 +40,25 @@ app.get('/', (req, res) => {
 
 
 // Connect to MongoDB
-mongoose.set('strictQuery', false)
-const connectDB = async () => {
-    try{
-        await mongoose.connect(CONNECTION_URL)
-        console.log('MongoDB database is connected')
-    } catch(err) {
-        console.log('Failed to connect to the MongoDB database')
-    }
-}
+// mongoose.set('strictQuery', false)
+// const connectDB = async () => {
+//     try{
+//         await mongoose.connect(CONNECTION_URL)
+//         console.log('MongoDB database is connected')
+//     } catch(err) {
+//         console.log('Failed to connect to the MongoDB database')
+//     }
+// }
+
+// Start Server
+// const startServer = async () => {
+//     await connectDB();
+//     app.listen(PORT, () => {
+//       console.log(`Server is running on port ${PORT}`);
+//     });
+//   }
+  
+// startServer()
 
 
 
@@ -59,12 +69,16 @@ const connectDB = async () => {
 // })
 
 
-// Start Server
-const startServer = async () => {
-    await connectDB();
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
-  }
-  
-startServer()
+
+
+
+mongoose.connect(CONNECTION_URL)
+    .then(() => app.listen(PORT, () => console.log(`Server running on port: ${PORT}`)))
+    .catch((error) => {
+        console.log(error.message)
+    })
+
+
+mongoose.connection.on("disconnected", () => {
+    console.log("mongoDB disconnected!")
+})

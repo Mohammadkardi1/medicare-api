@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "name": "medicare-api",
   "builds": [
     {
       "src": "index.js",
