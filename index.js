@@ -3,9 +3,9 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
-import authRouter from './routes/authRouter.js'
-import patientRouter from './routes/patientRouter.js'
-import doctorRouter from './routes/doctorRouter.js'
+// import authRouter from './routes/authRouter.js'
+// import patientRouter from './routes/patientRouter.js'
+// import doctorRouter from './routes/doctorRouter.js'
 
 
 const app = express()
@@ -28,9 +28,9 @@ app.use(express.json())
 
 
 // Define routes for endpoints
-app.use('/api/auth', authRouter)
-app.use('/api/patient', patientRouter)
-app.use('/api/doctor', doctorRouter)
+// app.use('/api/auth', authRouter)
+// app.use('/api/patient', patientRouter)
+// app.use('/api/doctor', doctorRouter)
 
 
 app.get('/', (req, res) => {
