@@ -29,7 +29,7 @@ app.use(express.json())
 
 // Define routes for endpoints
 app.use('/api/auth', authRouter)
-app.use('/api/patient', patientRouter)
+// app.use('/api/patient', patientRouter)
 app.use('/api/doctor', doctorRouter)
 
 
