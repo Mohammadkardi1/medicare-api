@@ -15,9 +15,11 @@ const port = process.env.PORT || 8000
 const CONNECTION_URL = process.env.MONGO_URL
 
 
+
+// ['http://localhost:5173', 'https://airbnb-clinet.vercel.app'] 
 const corsOptions = {
     credentials: true,
-    origin: ['http://localhost:5173', 'https://airbnb-clinet.vercel.app'] 
+    origin: '*' 
 }
 
  
@@ -39,14 +41,34 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(cors(corsOptions))
 
+
+
+
 // Define routes for endpoints
 app.use('/api/auth', authRouter)
 app.use('/api/patient', patientRouter)
 app.use('/api/doctor', doctorRouter)
 
 
+app.get('/', (req, res) => {
+    res.status(200).send('API is running!');
+  });
+
+
+
 // Start the server
-app.listen(port, () => {
-    connectDB()
-    console.log("Server is running on port " + port)
-})
+// app.listen(port, () => {
+//     connectDB()
+//     console.log("Server is running on port " + port)
+// })
+
+
+// Start Server
+const startServer = async () => {
+    await connectDB();
+    app.listen(port, () => {
+      console.log(`Server is running on port ${port}`);
+    });
+  }
+  
+  startServer()
