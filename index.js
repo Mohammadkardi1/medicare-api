@@ -6,23 +6,38 @@ import dotenv from 'dotenv'
 import authRouter from './routes/authRouter.js'
 import patientRouter from './routes/patientRouter.js'
 import doctorRouter from './routes/doctorRouter.js'
-import reviewRouter from './routes/reviewRouter.js'
+
+
+const app = express()
 
 dotenv.config()
 
-const app = express()
-const port = process.env.PORT || 8000
+const PORT = process.env.PORT || 8000
 const CONNECTION_URL = process.env.MONGO_URL
 
 
-
 // ['http://localhost:5173', 'https://airbnb-clinet.vercel.app'] 
-const corsOptions = {
+// Middleware
+app.use(cors({
     credentials: true,
     origin: '*' 
-}
+}))
+app.use(cookieParser())
+app.use(express.json())
 
- 
+
+
+// Define routes for endpoints
+app.use('/api/auth', authRouter)
+app.use('/api/patient', patientRouter)
+app.use('/api/doctor', doctorRouter)
+
+
+app.get('/', (req, res) => {
+    res.status(200).json({message: 'API is running!'});
+  });
+
+
 
 // Connect to MongoDB
 mongoose.set('strictQuery', false)
@@ -36,25 +51,6 @@ const connectDB = async () => {
 }
 
 
-// Middleware
-app.use(express.json())
-app.use(cookieParser())
-app.use(cors(corsOptions))
-
-
-
-
-// Define routes for endpoints
-app.use('/api/auth', authRouter)
-app.use('/api/patient', patientRouter)
-app.use('/api/doctor', doctorRouter)
-
-
-app.get('/', (req, res) => {
-    res.status(200).send('API is running!');
-  });
-
-
 
 // Start the server
 // app.listen(port, () => {
@@ -66,9 +62,9 @@ app.get('/', (req, res) => {
 // Start Server
 const startServer = async () => {
     await connectDB();
-    app.listen(port, () => {
-      console.log(`Server is running on port ${port}`);
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
     });
   }
   
-  startServer()
+startServer()
