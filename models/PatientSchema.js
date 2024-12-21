@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 import Jwt  from 'jsonwebtoken'
 
-const patientModel = new mongoose.Schema({
+const patientSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   name: { type: String, required: true },
@@ -16,7 +16,7 @@ const patientModel = new mongoose.Schema({
 
 
 // Instance method for generate a JWT token
-patientModel.methods.generateToken = function () {
+patientSchema.methods.generateToken = function () {
   const payload = {
       id: this._id, 
       name: this.name, 
@@ -29,4 +29,9 @@ patientModel.methods.generateToken = function () {
 
 
 
-export default mongoose.model("Patient", patientModel)
+export default mongoose.model("Patient", patientSchema)
+
+
+// const authModel = mongoose.model('auth', authSchema)
+
+// export default authModel
