@@ -3,7 +3,7 @@
     "name": "medicare-api",
     "routes": [
       {
-        "src": "/(.*)",
+        "src": "/[^.]+",
         "dest": "/index.js"
       }
     ]
