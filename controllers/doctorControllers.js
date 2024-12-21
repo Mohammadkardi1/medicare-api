@@ -35,9 +35,6 @@ export const fetchDoctor = async (req, res) => {
     try {
         const doctor = await doctorSchema.findById(doctorID).populate("reviews").select("-password")
 
-
-
-
         if (!doctor) {
             return res.status(404).json({success: true, message: "Doctor Not Found."})
         }
@@ -84,8 +81,6 @@ export const updateDoctor = async (req, res) => {
         return res.status(500).json({success: false, message: "Internal server error. Please try again later."})
     }
 }
-
-
 
 export const searchDoctors = async (req, res) => {
     const { doctorName } = req.query

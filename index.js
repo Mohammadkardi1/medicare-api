@@ -16,7 +16,7 @@ const CONNECTION_URL = process.env.MONGO_URL
 
 
 const corsOptions = {
-    origin: true 
+    origin: ['http://localhost:5173', 'https://airbnb-clinet.vercel.app'] 
 }
 
 
