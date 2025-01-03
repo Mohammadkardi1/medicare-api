@@ -42,7 +42,6 @@ export const register = async (req, res) => {
         const salt = await bcrypt.genSalt(10)
         const hashPassword = await bcrypt.hash(password, salt)
 
-
         let user = null
         const userModel = role === 'patient' ? patientModel : role === 'doctor' ? doctorModel : null
 
@@ -86,24 +85,20 @@ export const login = async (req, res) => {
     }
  
     try {
-
         const [patient, doctor] = await Promise.all([
             patientModel.findOne({email}),
             doctorModel.findOne({email}).populate("reviews")
         ])
-
         const existingUser = patient || doctor
         // Check if the user exsits in Database
         if (!existingUser) {
             return res.status(404).json({success: false, message: "User not found! Please Sign up"})
         }
-
         // Compare password
         const isPasswordMatch = await bcrypt.compare(req.body.password, existingUser.password)
         if (!isPasswordMatch) {
             return res.status(400).json({status: false, message: "The password you entered is incorrect"})
         }
-
         if (!existingUser.verified) {   
 			return res.status(400).send({ message: "Your account has not verified yet. Please check your email for a verification link" })
         }
@@ -126,26 +121,19 @@ export const verifyEmail = async (req, res) => {
     try {
         const userModel = req.params.role === "doctor" ? doctorModel : patientModel
         const existingUser = await userModel.findOne({ _id: req.params.id })
-
-        
         if (!existingUser) {
             return res.status(404).json({ message: "User Not Found." })
         }
-
         if (existingUser.verified) {
             return res.status(400).send({ message: "Email have already verified! Please Log in" })
         }
-
         const existingToken = await tokenModel.findOne({
             userId: req.params.id,
             token: req.params.token,
         })
-
-
         if (!existingToken) {
             return res.status(404).send({ message: "Invalid or expired token. Please request a new link to proceed" })
         }
-
         await userModel.findByIdAndUpdate(existingUser._id, {verified: true })
         await tokenModel.findByIdAndDelete(existingToken._id)
 

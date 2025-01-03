@@ -5,7 +5,6 @@ export const restrictAccess = roles => async (req, res, next) => {
 
     try {
         const userId = req.userId
-
         const [patient, doctor] = await Promise.all([
             patientModel.findById(userId),
             doctorModel.findById(userId)
@@ -22,7 +21,6 @@ export const restrictAccess = roles => async (req, res, next) => {
         }
 
         next()
-
     } catch (error) {
         return res.status(500).json({success: false, message: "Internal server error. Please try again later."})
     }

@@ -6,7 +6,8 @@
     "node": "22.x"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "start-dev": "nodemon index.js"
   },
   "author": "Mohammad Kardi",
   "license": "ISC",

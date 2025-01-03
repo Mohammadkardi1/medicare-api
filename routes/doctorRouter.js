@@ -16,5 +16,4 @@ router.delete('/deleteDoctor/:doctorID', verifyToken, restrictAccess(["doctor"])
 router.patch('/updateDoctor/:doctorID', verifyToken, restrictAccess(["doctor"]), updateDoctor)
 router.get('/search', searchDoctors)
 
-
 export default router
